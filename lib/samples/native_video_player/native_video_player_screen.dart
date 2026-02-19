@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:native_video_player/native_video_player.dart';
+import 'package:golden_video_player/golden_video_player.dart';
 import 'widgets/widgets.dart';
 
 class NativeVideoPlayerScreen extends StatefulWidget {

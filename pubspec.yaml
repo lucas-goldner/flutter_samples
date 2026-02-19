@@ -9,7 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  native_video_player: ^4.0.0
+  golden_video_player:
+    path: packages/golden_video_player
 
 dev_dependencies:
   flutter_test:
