@@ -11,9 +11,10 @@ class NativeVideoPlayerScreen extends StatefulWidget {
 }
 
 class _NativeVideoPlayerScreenState extends State<NativeVideoPlayerScreen> {
-  NativeVideoPlayerController? _controller;
+  VideoController? _controller;
   bool _isPlaying = false;
   bool _isLooping = false;
+  bool _isPictureInPictureActive = false;
   double _playbackSpeed = 1.0;
   double _volume = 1.0;
   Duration _currentPosition = Duration.zero;
@@ -57,6 +58,10 @@ class _NativeVideoPlayerScreenState extends State<NativeVideoPlayerScreen> {
         case VolumeChangedEvent():
           // Volume changed
           break;
+        case PictureInPictureStatusChangedEvent(:final isActive):
+          setState(() {
+            _isPictureInPictureActive = isActive;
+          });
       }
     });
 
@@ -141,6 +146,11 @@ class _NativeVideoPlayerScreenState extends State<NativeVideoPlayerScreen> {
             LoadVideoButtons(
               onLoadFromAssets: _loadVideoFromAssets,
               onLoadFromNetwork: _loadVideoFromNetwork,
+            ),
+            const SizedBox(height: 16),
+            PictureInPictureToggle(
+              isPictureInPictureActive: _isPictureInPictureActive,
+              controller: _controller,
             ),
             const SizedBox(height: 24),
             const FeaturesList(),

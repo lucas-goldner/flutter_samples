@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:native_video_player/native_video_player.dart';
+import 'package:golden_video_player/golden_video_player.dart';
 
 class VideoPlayerWidget extends StatelessWidget {
-  final Function(NativeVideoPlayerController) onViewReady;
+  final void Function(VideoController) onViewReady;
 
   const VideoPlayerWidget({
     super.key,

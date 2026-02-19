@@ -4,7 +4,7 @@ import 'package:golden_video_player/golden_video_player.dart';
 class PlaybackControls extends StatelessWidget {
   final bool isPlaying;
   final bool isLooping;
-  final NativeVideoPlayerController? controller;
+  final VideoController? controller;
   final VoidCallback onToggleLoop;
 
   const PlaybackControls({
