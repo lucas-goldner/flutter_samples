@@ -3,12 +3,14 @@ import 'package:golden_video_player/golden_video_player.dart';
 
 class PictureInPictureToggle extends StatelessWidget {
   final bool isPictureInPictureActive;
-  final VideoController? controller;
+  final NativeVideoPlayerController? controller;
+  final ValueChanged<bool>? onToggle;
 
   const PictureInPictureToggle({
     super.key,
     required this.isPictureInPictureActive,
     required this.controller,
+    this.onToggle,
   });
 
   @override
@@ -28,9 +30,14 @@ class PictureInPictureToggle extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: controller == null
                   ? null
-                  : isPictureInPictureActive
-                      ? controller!.exitPictureInPicture
-                      : controller!.enterPictureInPicture,
+                  : () async {
+                      if (isPictureInPictureActive) {
+                        await controller!.exitPictureInPicture();
+                      } else {
+                        await controller!.enterPictureInPicture();
+                      }
+                      onToggle?.call(!isPictureInPictureActive);
+                    },
               icon: Icon(
                 isPictureInPictureActive
                     ? Icons.close_fullscreen

@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   golden_video_player:
-    path: packages/golden_video_player
+    path: /Users/lucasgoldner/Developer/Flutter/OS/golden_video_player
 
 dev_dependencies:
   flutter_test:

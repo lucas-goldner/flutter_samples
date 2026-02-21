@@ -7,3 +7,4 @@ export 'load_video_buttons.dart';
 export 'features_list.dart';
 export 'feature_item.dart';
 export 'picture_in_picture_toggle.dart';
+export 'native_controls_toggle.dart';

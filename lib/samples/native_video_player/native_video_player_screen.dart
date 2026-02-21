@@ -11,10 +11,12 @@ class NativeVideoPlayerScreen extends StatefulWidget {
 }
 
 class _NativeVideoPlayerScreenState extends State<NativeVideoPlayerScreen> {
-  VideoController? _controller;
+  NativeVideoPlayerController? _controller;
+  VideoSource? _currentVideoSource;
   bool _isPlaying = false;
   bool _isLooping = false;
   bool _isPictureInPictureActive = false;
+  bool _showNativeControls = false;
   double _playbackSpeed = 1.0;
   double _volume = 1.0;
   Duration _currentPosition = Duration.zero;
@@ -58,10 +60,6 @@ class _NativeVideoPlayerScreenState extends State<NativeVideoPlayerScreen> {
         case VolumeChangedEvent():
           // Volume changed
           break;
-        case PictureInPictureStatusChangedEvent(:final isActive):
-          setState(() {
-            _isPictureInPictureActive = isActive;
-          });
       }
     });
 
@@ -71,12 +69,12 @@ class _NativeVideoPlayerScreenState extends State<NativeVideoPlayerScreen> {
 
   void _loadVideoFromAssets() {
     if (_controller != null) {
-      _controller!.loadVideo(
-        VideoSource(
-          path: 'assets/sample_video.mp4',
-          type: VideoSourceType.asset,
-        ),
+      final videoSource = VideoSource(
+        path: 'assets/sample_video.mp4',
+        type: VideoSourceType.asset,
       );
+      _currentVideoSource = videoSource;
+      _controller!.loadVideo(videoSource);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Loading video from assets...')),
       );
@@ -85,13 +83,13 @@ class _NativeVideoPlayerScreenState extends State<NativeVideoPlayerScreen> {
 
   void _loadVideoFromNetwork() {
     if (_controller != null) {
-      _controller!.loadVideo(
-        VideoSource(
-          path:
-              'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-          type: VideoSourceType.network,
-        ),
+      final videoSource = VideoSource(
+        path:
+            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        type: VideoSourceType.network,
       );
+      _currentVideoSource = videoSource;
+      _controller!.loadVideo(videoSource);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Loading video from network...')),
       );
@@ -112,7 +110,12 @@ class _NativeVideoPlayerScreenState extends State<NativeVideoPlayerScreen> {
               onViewReady: (controller) {
                 _controller = controller;
                 _setupEventListeners();
+                // Reload the previous video if one was loaded
+                if (_currentVideoSource != null) {
+                  _controller?.loadVideo(_currentVideoSource!);
+                }
               },
+              showNativeControls: _showNativeControls,
             ),
             VideoInfoCard(
               isPlaying: _isPlaying,
@@ -148,9 +151,19 @@ class _NativeVideoPlayerScreenState extends State<NativeVideoPlayerScreen> {
               onLoadFromNetwork: _loadVideoFromNetwork,
             ),
             const SizedBox(height: 16),
+            NativeControlsToggle(
+              showNativeControls: _showNativeControls,
+              onToggle: (value) {
+                setState(() => _showNativeControls = value);
+              },
+            ),
+            const SizedBox(height: 16),
             PictureInPictureToggle(
               isPictureInPictureActive: _isPictureInPictureActive,
               controller: _controller,
+              onToggle: (value) {
+                setState(() => _isPictureInPictureActive = value);
+              },
             ),
             const SizedBox(height: 24),
             const FeaturesList(),
